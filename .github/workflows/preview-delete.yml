@@ -21,8 +21,8 @@ jobs:
 
       - name: Delete Cloud Run services
         run: |
-          gcloud run services delete api-pr-${{ github.event.number }} --platform=managed --region=us-central1 --quiet
-          gcloud run services delete dashboard-pr-${{ github.event.number }} --platform=managed --region=us-central1 --quiet
+          gcloud run services delete api-pr-${{ github.event.number }} --platform=managed --region=us-east4 --quiet
+          gcloud run services delete dashboard-pr-${{ github.event.number }} --platform=managed --region=us-east4 --quiet
 
       - name: Delete the database
         run: |
@@ -41,7 +41,8 @@ jobs:
 # jobs:
 #   cleanup:
 #     runs-on: ubuntu-latest
-
+ git config --global user.email "nithinthadem@zemosolabs.com"
+  git config --global user.name "NithinThadem"
 #     steps:
 #       - name: Set up Google Cloud SDK
 #         uses: google-github-actions/setup-gcloud@v1
