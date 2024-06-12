@@ -41,8 +41,8 @@ jobs:
 # jobs:
 #   cleanup:
 #     runs-on: ubuntu-latest
- git config --global user.email "nithinthadem@zemosolabs.com"
-  git config --global user.name "NithinThadem"
+#  git config --global user.email "nithinthadem@zemosolabs.com"
+#   git config --global user.name "NithinThadem"
 #     steps:
 #       - name: Set up Google Cloud SDK
 #         uses: google-github-actions/setup-gcloud@v1
