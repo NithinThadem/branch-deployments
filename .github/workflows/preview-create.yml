@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies with yarn
         run: yarn install
-        working-directory: $_DIRECTORY
+        working-directory: ${{ env._DIRECTORY }}
 
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v1
@@ -181,9 +181,6 @@ jobs:
       - name: Patch Cloud SQL instance activation policy
         run: |
           gcloud sql instances patch $INSTANCE_CONNECTION_NAME --activation-policy NEVER
-
-
-
 
 # name: Create Preview Environment
 
