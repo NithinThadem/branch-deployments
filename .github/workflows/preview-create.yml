@@ -96,7 +96,6 @@ jobs:
             API_SECRET_HELICONE_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_HELICONE_API_KEY/latest
             API_SECRET_AZURE_OPENAI_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AZURE_OPENAI_KEY/latest
             API_SECRET_AZURE_OPENAI_ENDPOINT: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AZURE_OPENAI_ENDPOINT/latest
-          service-account-key: ${{ secrets.GCP_SA_KEY_PATH }}
 
       - name: Create a new database
         run: |
