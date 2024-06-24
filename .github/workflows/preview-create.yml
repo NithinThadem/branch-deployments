@@ -120,10 +120,11 @@ jobs:
             echo "DB_POOL_SIZE=${DB_POOL_SIZE}"
             echo "DB_ENABLE_REPLICA=${DB_ENABLE_REPLICA}"
             echo "DB_NAME=${DB_NAME}"
-            
+
       - name: Run migrations
         run: |
           echo "Running migrations"
+          echo ${{ steps.secrets.outputs.API_SECRET_API_URL }}
           cd ${{ env._DIRECTORY }}
           yarn typeorm migration:run -d ./src/services/database/data-source.ts
 
