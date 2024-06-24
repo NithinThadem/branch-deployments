@@ -1,0 +1,45 @@
+{
+	"compilerOptions": {
+		"skipLibCheck": true,
+		"types": [
+			"node",
+			"long",
+			"jest"
+		],
+		"target": "esnext",
+		"module": "commonjs",
+		"outDir": "dist",
+		"sourceMap": false,
+		"allowSyntheticDefaultImports": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"allowJs": true,
+		"baseUrl": "src",
+		"paths": {
+			"*": [
+				"node_modules/"
+			],
+			"typings/*": [
+				"src/typings/*"
+			]
+		},
+		"resolveJsonModule": true,
+		"jsx": "react",
+	},
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.js",
+		"handler.js",
+		"lang/*.json",
+		"src/static/*.json",
+		"test/fake-statement-data.ts",
+		"src/services/email/index.tsx"
+	],
+	"ts-node": {
+		"files": true
+	},
+	"lib": [
+		"es2021",
+		"esnext.asynciterable"
+	]
+}

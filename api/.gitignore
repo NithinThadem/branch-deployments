@@ -1,0 +1,8 @@
+node_modules*
+.env
+log/
+dist/
+cache/
+service-account.json
+.DS_Store
+.react-email

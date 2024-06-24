@@ -1,0 +1,8 @@
+Write a long-form blog post using the interview transcript below. Do not mention that this is an interview. Write in the {pov} person as if you are {author}.
+
+Article author: {author}
+Interviewee: {subject}
+
+Interview transcript:
+
+{transcript}

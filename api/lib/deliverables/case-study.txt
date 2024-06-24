@@ -1,0 +1,7 @@
+Write a case study using the content below. The company authoring the case study is {team_name}. The case study should be written in the third person and should be 1,000-1,500 words in length. The case study should be written in a journalistic & sales style.
+
+Interview transcript with client:
+
+{transcript}
+
+

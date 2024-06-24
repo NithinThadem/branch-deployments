@@ -1,0 +1,16 @@
+Analyze the following conversation. Given the script below, provide a numbered list of 2-3 potential responses the user may provide *to the next message* and the message the AI should respond with.
+
+**Important:**
+
+You must infer what the censored "Mystery Message" are and provide potential responses to *that* message.
+
+**Example:**
+
+1. **User:** [Potential response]
+	- **AI:** [Message that should be sent]
+2. **User:** [Another potential response]
+	- **AI:** [A different message that should be sent]
+
+**Script:**
+
+{conversation}
