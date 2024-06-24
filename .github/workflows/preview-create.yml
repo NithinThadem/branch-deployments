@@ -106,7 +106,9 @@ jobs:
       - name: Run migrations
         run: |
           echo "Running migrations"
-          yarn db:migrate
+          cd ${{ env._DIRECTORY }}
+          yarn typeorm migration:run -d ./src/services/database/data-source.ts
+
         env:
           API_URL: ${{ steps.secrets.outputs.API_SECRET_API_URL }}
           AUTH0_AUDIENCE: ${{ steps.secrets.outputs.API_SECRET_AUTH0_AUDIENCE }}
