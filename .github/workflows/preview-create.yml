@@ -82,6 +82,8 @@ jobs:
             API_SECRET_TWILIO_AUTH_TOKEN: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_TWILIO_AUTH_TOKEN/latest
             API_SECRET_TWILIO_PRIMARY_CUSTOMER_SID: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_TWILIO_PRIMARY_CUSTOMER_SID/latest
             API_SECRET_TWILIO_VERIFY_SID: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_TWILIO_VERIFY_SID/latest
+            SERVICE_ACCOUNT_KEY_PATH: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/SERVICE_ACCOUNT_KEY_PATH/latest
+            API_SECRET_GCP_SA_KEY_PATH: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_GCP_SA_KEY_PATH/latest
             API_SECRET_SENTRY_DSN: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_SENTRY_DSN/latest
             API_SECRET_RESEND_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_RESEND_API_KEY/latest
             API_SECRET_UNSPLASH_ACCESS_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_UNSPLASH_ACCESS_KEY/latest
