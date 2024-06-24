@@ -105,8 +105,7 @@ jobs:
 
       - name: Start Cloud SQL Proxy
         run: |
-          cloud_sql_proxy -dir=/cloudsql -instances=${{ env.INSTANCE_CONNECTION_NAME }}=tcp:5432 &
-          sleep 5  # Wait for the Cloud SQL Proxy to start
+          cloud_sql_proxy -dir=/cloudsql -instances=${{ env.INSTANCE_CONNECTION_NAME }}=tcp:5432 & sleep 5  # Wait for the Cloud SQL Proxy to start
 
       - name: Run migrations
         run: |
