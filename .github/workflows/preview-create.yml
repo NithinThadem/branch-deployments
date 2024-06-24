@@ -109,7 +109,7 @@ jobs:
           
       - name: Print environment variables
         run: |
-            echo "${DB_DATABASE}"
+            echo "${{ env.INSTANCE_CONNECTION_NAME }}"
             echo "${DB_HOST}"
             echo "${DB_USERNAME}"
             echo "${DB_PASSWORD}"
