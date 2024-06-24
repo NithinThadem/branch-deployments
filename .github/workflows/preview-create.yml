@@ -8,45 +8,354 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      _DIRECTORY: api
+      _GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      INSTANCE_CONNECTION_NAME: ${{ secrets.CLOUD_SQL_INSTANCE_CONNECTION_NAME }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install yarn
+        run: npm install -g yarn
+
+      - name: Install dependencies with yarn
+        run: yarn install
+        working-directory: $_DIRECTORY
+
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_SA_KEY_PATH }}
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+      - name: Get secrets from Google Secret Manager
+        id: secrets
+        uses: google-github-actions/get-secretmanager-secrets@main
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          secrets: |
+            API_SECRET_API_URL: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_API_URL/latest
+            API_SECRET_AUTH0_AUDIENCE: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AUTH0_AUDIENCE/latest
+            API_SECRET_AUTH0_ISSUER_BASE_URL: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AUTH0_ISSUER_BASE_URL/latest
+            API_SECRET_DB_DATABASE: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_DB_DATABASE/latest
+            API_SECRET_DB_ENABLE_REPLICA: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_DB_ENABLE_REPLICA/latest
+            API_SECRET_DB_HOST: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_DB_HOST/latest
+            API_SECRET_DB_LOGGING: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_DB_LOGGING/latest
+            API_SECRET_DB_PASSWORD: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_DB_PASSWORD/latest
+            API_SECRET_DB_POOL_SIZE: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_DB_POOL_SIZE/latest
+            API_SECRET_DB_PORT: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_DB_PORT/latest
+            API_SECRET_DB_SYNC: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_DB_SYNC/latest
+            API_SECRET_DB_TYPE: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_DB_TYPE/latest
+            API_SECRET_DB_USERNAME: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_DB_USERNAME/latest
+            API_SECRET_AUTH0_MGMT_AUDIENCE: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AUTH0_MGMT_AUDIENCE/latest
+            API_SECRET_AUTH0_MGMT_CLIENT_ID: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AUTH0_MGMT_CLIENT_ID/latest
+            API_SECRET_AUTH0_MGMT_CLIENT_SECRET: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AUTH0_MGMT_CLIENT_SECRET/latest
+            API_SECRET_AUTH0_SECRET: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AUTH0_SECRET/latest
+            API_SECRET_AUTH0_TOKEN_SIGNING_ALG: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AUTH0_TOKEN_SIGNING_ALG/latest
+            API_SECRET_AUTH0_TOKEN_URL: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AUTH0_TOKEN_URL/latest
+            API_SECRET_DEEPGRAM_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_DEEPGRAM_API_KEY/latest
+            API_SECRET_ELEVENLABS_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_ELEVENLABS_API_KEY/latest
+            API_SECRET_FQDN: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_FQDN/latest
+            API_SECRET_GCP_BUCKET_NAME: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_GCP_BUCKET_NAME/latest
+            API_SECRET_GCP_PROJECT_ID: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_GCP_PROJECT_ID/latest
+            API_SECRET_LOOPS_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_LOOPS_API_KEY/latest
+            API_SECRET_MISTRAL_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_MISTRAL_API_KEY/latest
+            API_SECRET_NANGO_HMAC_SECRET: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_NANGO_HMAC_SECRET/latest
+            API_SECRET_NANGO_SECRET_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_NANGO_SECRET_KEY/latest
+            API_SECRET_NODE_ENV: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_NODE_ENV/latest
+            API_SECRET_OPENAI_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_OPENAI_API_KEY/latest
+            API_SECRET_OUTBOUND_PHONE_NUMBER: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_OUTBOUND_PHONE_NUMBER/latest
+            API_SECRET_PINECONE_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_PINECONE_API_KEY/latest
+            API_SECRET_PINECONE_ENVIRONMENT: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_PINECONE_ENVIRONMENT/latest
+            API_SECRET_PINECONE_INDEX: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_PINECONE_INDEX/latest
+            API_SECRET_PUBSUB_TOPIC: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_PUBSUB_TOPIC/latest
+            API_SECRET_REDIS_HOST: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_REDIS_HOST/latest
+            API_SECRET_SEGMENT_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_SEGMENT_API_KEY/latest
+            API_SECRET_STRIPE_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_STRIPE_API_KEY/latest
+            API_SECRET_STRIPE_WEBHOOK_SECRET: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_STRIPE_WEBHOOK_SECRET/latest
+            API_SECRET_TWILIO_ACCOUNT_SID: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_TWILIO_ACCOUNT_SID/latest
+            API_SECRET_TWILIO_AUTH_TOKEN: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_TWILIO_AUTH_TOKEN/latest
+            API_SECRET_TWILIO_PRIMARY_CUSTOMER_SID: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_TWILIO_PRIMARY_CUSTOMER_SID/latest
+            API_SECRET_TWILIO_VERIFY_SID: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_TWILIO_VERIFY_SID/latest
+            SERVICE_ACCOUNT_KEY_PATH: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/SERVICE_ACCOUNT_KEY_PATH/latest
+            API_SECRET_GCP_SA_KEY_PATH: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_GCP_SA_KEY_PATH/latest
+            API_SECRET_SENTRY_DSN: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_SENTRY_DSN/latest
+            API_SECRET_RESEND_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_RESEND_API_KEY/latest
+            API_SECRET_UNSPLASH_ACCESS_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_UNSPLASH_ACCESS_KEY/latest
+            API_SECRET_UNSPLASH_SECRET_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_UNSPLASH_SECRET_KEY/latest
+            API_SECRET_PLAYHT_USER_ID: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_PLAYHT_USER_ID/latest
+            API_SECRET_PLAYHT_SECRET_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_PLAYHT_SECRET_KEY/latest
+            API_SECRET_MIXPANEL_TOKEN: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_MIXPANEL_TOKEN/latest
+            API_SECRET_ZAPIER_CLIENT_ID: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_ZAPIER_CLIENT_ID/latest
+            API_SECRET_PROMPTARMOR_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_PROMPTARMOR_API_KEY/latest
+            API_SECRET_HELICONE_API_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_HELICONE_API_KEY/latest
+            API_SECRET_AZURE_OPENAI_KEY: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AZURE_OPENAI_KEY/latest
+            API_SECRET_AZURE_OPENAI_ENDPOINT: projects/${{ secrets.GCP_PROJECT_ID }}/secrets/API_SECRET_AZURE_OPENAI_ENDPOINT/latest
+          service-account-key: ${{ secrets.GCP_SA_KEY_PATH }}
 
       - name: Create a new database
         run: |
           DB_NAME="pr-${{ github.event.number }}"
-          INSTANCE_CONNECTION_NAME="${{ secrets.CLOUD_SQL_INSTANCE_CONNECTION_NAME }}"
           INSTANCE_NAME=$(echo $INSTANCE_CONNECTION_NAME | cut -d':' -f3)
           gcloud sql databases create $DB_NAME --instance=$INSTANCE_NAME --project=${{ secrets.GCP_PROJECT_ID }}
 
       - name: Run migrations
         run: |
-          DB_NAME="pr-${{ github.event.number }}"
-          python manage.py migrate --database=$DB_NAME
+          echo "Running migrations"
+          yarn db:migrate
+        env:
+          API_URL: ${{ steps.secrets.outputs.API_SECRET_API_URL }}
+          AUTH0_AUDIENCE: ${{ steps.secrets.outputs.API_SECRET_AUTH0_AUDIENCE }}
+          AUTH0_ISSUER_BASE_URL: ${{ steps.secrets.outputs.API_SECRET_AUTH0_ISSUER_BASE_URL }}
+          DB_DATABASE: ${{ steps.secrets.outputs.API_SECRET_DB_DATABASE }}
+          DB_ENABLE_REPLICA: ${{ steps.secrets.outputs.API_SECRET_DB_ENABLE_REPLICA }}
+          DB_HOST: ${{ steps.secrets.outputs.API_SECRET_DB_HOST }}
+          DB_LOGGING: ${{ steps.secrets.outputs.API_SECRET_DB_LOGGING }}
+          DB_PASSWORD: ${{ steps.secrets.outputs.API_SECRET_DB_PASSWORD }}
+          DB_POOL_SIZE: ${{ steps.secrets.outputs.API_SECRET_DB_POOL_SIZE }}
+          DB_PORT: ${{ steps.secrets.outputs.API_SECRET_DB_PORT }}
+          DB_SYNC: ${{ steps.secrets.outputs.API_SECRET_DB_SYNC }}
+          DB_TYPE: ${{ steps.secrets.outputs.API_SECRET_DB_TYPE }}
+          DB_USERNAME: ${{ steps.secrets.outputs.API_SECRET_DB_USERNAME }}
+          AUTH0_MGMT_AUDIENCE: ${{ steps.secrets.outputs.API_SECRET_AUTH0_MGMT_AUDIENCE }}
+          AUTH0_MGMT_CLIENT_ID: ${{ steps.secrets.outputs.API_SECRET_AUTH0_MGMT_CLIENT_ID }}
+          AUTH0_MGMT_CLIENT_SECRET: ${{ steps.secrets.outputs.API_SECRET_AUTH0_MGMT_CLIENT_SECRET }}
+          AUTH0_SECRET: ${{ steps.secrets.outputs.API_SECRET_AUTH0_SECRET }}
+          AUTH0_TOKEN_SIGNING_ALG: ${{ steps.secrets.outputs.API_SECRET_AUTH0_TOKEN_SIGNING_ALG }}
+          AUTH0_TOKEN_URL: ${{ steps.secrets.outputs.API_SECRET_AUTH0_TOKEN_URL }}
+          DEEPGRAM_API_KEY: ${{ steps.secrets.outputs.API_SECRET_DEEPGRAM_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ steps.secrets.outputs.API_SECRET_ELEVENLABS_API_KEY }}
+          FQDN: ${{ steps.secrets.outputs.API_SECRET_FQDN }}
+          GCP_BUCKET_NAME: ${{ steps.secrets.outputs.API_SECRET_GCP_BUCKET_NAME }}
+          GCP_PROJECT_ID: ${{ steps.secrets.outputs.API_SECRET_GCP_PROJECT_ID }}
+          LOOPS_API_KEY: ${{ steps.secrets.outputs.API_SECRET_LOOPS_API_KEY }}
+          MISTRAL_API_KEY: ${{ steps.secrets.outputs.API_SECRET_MISTRAL_API_KEY }}
+          NANGO_HMAC_SECRET: ${{ steps.secrets.outputs.API_SECRET_NANGO_HMAC_SECRET }}
+          NANGO_SECRET_KEY: ${{ steps.secrets.outputs.API_SECRET_NANGO_SECRET_KEY }}
+          NODE_ENV: ${{ steps.secrets.outputs.API_SECRET_NODE_ENV }}
+          OPENAI_API_KEY: ${{ steps.secrets.outputs.API_SECRET_OPENAI_API_KEY }}
+          OUTBOUND_PHONE_NUMBER: ${{ steps.secrets.outputs.API_SECRET_OUTBOUND_PHONE_NUMBER }}
+          PINECONE_API_KEY: ${{ steps.secrets.outputs.API_SECRET_PINECONE_API_KEY }}
+          PINECONE_ENVIRONMENT: ${{ steps.secrets.outputs.API_SECRET_PINECONE_ENVIRONMENT }}
+          PINECONE_INDEX: ${{ steps.secrets.outputs.API_SECRET_PINECONE_INDEX }}
+          PUBSUB_TOPIC: ${{ steps.secrets.outputs.API_SECRET_PUBSUB_TOPIC }}
+          REDIS_HOST: ${{ steps.secrets.outputs.API_SECRET_REDIS_HOST }}
+          SEGMENT_API_KEY: ${{ steps.secrets.outputs.API_SECRET_SEGMENT_API_KEY }}
+          STRIPE_API_KEY: ${{ steps.secrets.outputs.API_SECRET_STRIPE_API_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ steps.secrets.outputs.API_SECRET_STRIPE_WEBHOOK_SECRET }}
+          TWILIO_ACCOUNT_SID: ${{ steps.secrets.outputs.API_SECRET_TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ steps.secrets.outputs.API_SECRET_TWILIO_AUTH_TOKEN }}
+          TWILIO_PRIMARY_CUSTOMER_SID: ${{ steps.secrets.outputs.API_SECRET_TWILIO_PRIMARY_CUSTOMER_SID }}
+          TWILIO_VERIFY_SID: ${{ steps.secrets.outputs.API_SECRET_TWILIO_VERIFY_SID }}
+          SENTRY_DSN: ${{ steps.secrets.outputs.API_SECRET_SENTRY_DSN }}
+          RESEND_API_KEY: ${{ steps.secrets.outputs.API_SECRET_RESEND_API_KEY }}
+          UNSPLASH_ACCESS_KEY: ${{ steps.secrets.outputs.API_SECRET_UNSPLASH_ACCESS_KEY }}
+          UNSPLASH_SECRET_KEY: ${{ steps.secrets.outputs.API_SECRET_UNSPLASH_SECRET_KEY }}
+          PLAYHT_USER_ID: ${{ steps.secrets.outputs.API_SECRET_PLAYHT_USER_ID }}
+          PLAYHT_SECRET_KEY: ${{ steps.secrets.outputs.API_SECRET_PLAYHT_SECRET_KEY }}
+          MIXPANEL_TOKEN: ${{ steps.secrets.outputs.API_SECRET_MIXPANEL_TOKEN }}
+          ZAPIER_CLIENT_ID: ${{ steps.secrets.outputs.API_SECRET_ZAPIER_CLIENT_ID }}
+          PROMPTARMOR_API_KEY: ${{ steps.secrets.outputs.API_SECRET_PROMPTARMOR_API_KEY }}
+          HELICONE_API_KEY: ${{ steps.secrets.outputs.API_SECRET_HELICONE_API_KEY }}
+          AZURE_OPENAI_KEY: ${{ steps.secrets.outputs.API_SECRET_AZURE_OPENAI_KEY }}
+          AZURE_OPENAI_ENDPOINT: ${{ steps.secrets.outputs.API_SECRET_AZURE_OPENAI_ENDPOINT }}
 
       - name: Build and push Docker images
         run: |
           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/api-pr-${{ github.event.number }} -f api/Dockerfile .
           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/dashboard-pr-${{ github.event.number }} -f dashboard/Dockerfile .
-          gcloud auth configure-docker
+          echo ${{ secrets.GCP_SA_KEY_PATH }} | docker login -u _json_key --password-stdin https://gcr.io
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/api-pr-${{ github.event.number }}
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/dashboard-pr-${{ github.event.number }}
 
       - name: Deploy to Cloud Run
         run: |
-          INSTANCE_CONNECTION_NAME="${{ secrets.CLOUD_SQL_INSTANCE_CONNECTION_NAME }}"
           gcloud run deploy api-pr-${{ github.event.number }} --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/api-pr-${{ github.event.number }} --platform=managed --region=us-central1 --set-env-vars=DB_NAME=pr-${{ github.event.number }},DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }},DB_HOST=$INSTANCE_CONNECTION_NAME --project=${{ secrets.GCP_PROJECT_ID }}
           gcloud run deploy dashboard-pr-${{ github.event.number }} --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/dashboard-pr-${{ github.event.number }} --platform=managed --region=us-central1 --project=${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Patch Cloud SQL instance activation policy
+        run: |
+          gcloud sql instances patch $INSTANCE_CONNECTION_NAME --activation-policy NEVER
+
+
+
+
+# name: Create Preview Environment
+
+# on:
+#   pull_request:
+#     types: [opened, synchronize, reopened]
+
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+
+#     env:
+#       _DIRECTORY: api
+#       _GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+#       INSTANCE_CONNECTION_NAME: ${{ secrets.CLOUD_SQL_INSTANCE_CONNECTION_NAME }}
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Install Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '18'
+
+#       - name: Install yarn
+#         run: npm install -g yarn
+
+#       - name: Install dependencies with yarn
+#         run: yarn install
+#         working-directory: $_DIRECTORY
+
+#       - name: Authenticate to GCP
+#         uses: google-github-actions/auth@v1
+#         with:
+#           credentials_json: ${{ secrets.GCP_SA_KEY_PATH }}
+
+#       - name: Create a new database
+#         run: |
+#           DB_NAME="pr-${{ github.event.number }}"
+#           INSTANCE_NAME=$(echo $INSTANCE_CONNECTION_NAME | cut -d':' -f3)
+#           gcloud sql databases create $DB_NAME --instance=$INSTANCE_NAME --project=${{ secrets.GCP_PROJECT_ID }}
+
+#       - name: Run migrations
+#         run: |
+#           echo "Running migrations"
+#           yarn db:migrate
+#         env:
+#           API_URL: ${{ secrets.API_SECRET_API_URL }}
+#           AUTH0_AUDIENCE: ${{ secrets.API_SECRET_AUTH0_AUDIENCE }}
+#           AUTH0_ISSUER_BASE_URL: ${{ secrets.API_SECRET_AUTH0_ISSUER_BASE_URL }}
+#           AUTH0_MGMT_AUDIENCE: ${{ secrets.API_SECRET_AUTH0_MGMT_AUDIENCE }}
+#           AUTH0_MGMT_CLIENT_ID: ${{ secrets.API_SECRET_AUTH0_MGMT_CLIENT_ID }}
+#           AUTH0_MGMT_CLIENT_SECRET: ${{ secrets.API_SECRET_AUTH0_MGMT_CLIENT_SECRET }}
+#           AUTH0_SECRET: ${{ secrets.API_SECRET_AUTH0_SECRET }}
+#           AUTH0_TOKEN_SIGNING_ALG: ${{ secrets.API_SECRET_AUTH0_TOKEN_SIGNING_ALG }}
+#           AUTH0_TOKEN_URL: ${{ secrets.API_SECRET_AUTH0_TOKEN_URL }}
+#           DB_DATABASE: ${{ secrets.API_SECRET_DB_DATABASE }}
+#           DB_ENABLE_REPLICA: ${{ secrets.API_SECRET_DB_ENABLE_REPLICA }}
+#           DB_HOST: $INSTANCE_CONNECTION_NAME
+#           DB_LOGGING: ${{ secrets.API_SECRET_DB_LOGGING }}
+#           DB_PASSWORD: ${{ secrets.API_SECRET_DB_PASSWORD }}
+#           DB_POOL_SIZE: ${{ secrets.API_SECRET_DB_POOL_SIZE }}
+#           DB_PORT: ${{ secrets.API_SECRET_DB_PORT }}
+#           DB_SYNC: ${{ secrets.API_SECRET_DB_SYNC }}
+#           DB_TYPE: ${{ secrets.API_SECRET_DB_TYPE }}
+#           DB_USERNAME: ${{ secrets.API_SECRET_DB_USERNAME }}
+#           DEEPGRAM_API_KEY: ${{ secrets.API_SECRET_DEEPGRAM_API_KEY }}
+#           ELEVENLABS_API_KEY: ${{ secrets.API_SECRET_ELEVENLABS_API_KEY }}
+#           FQDN: ${{ secrets.API_SECRET_FQDN }}
+#           GCP_BUCKET_NAME: ${{ secrets.API_SECRET_GCP_BUCKET_NAME }}
+#           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+#           LOOPS_API_KEY: ${{ secrets.API_SECRET_LOOPS_API_KEY }}
+#           MISTRAL_API_KEY: ${{ secrets.API_SECRET_MISTRAL_API_KEY }}
+#           NANGO_HMAC_SECRET: ${{ secrets.API_SECRET_NANGO_HMAC_SECRET }}
+#           NANGO_SECRET_KEY: ${{ secrets.API_SECRET_NANGO_SECRET_KEY }}
+#           NODE_ENV: ${{ secrets.API_SECRET_NODE_ENV }}
+#           OPENAI_API_KEY: ${{ secrets.API_SECRET_OPENAI_API_KEY }}
+#           OUTBOUND_PHONE_NUMBER: ${{ secrets.API_SECRET_OUTBOUND_PHONE_NUMBER }}
+#           PINECONE_API_KEY: ${{ secrets.API_SECRET_PINECONE_API_KEY }}
+#           PINECONE_ENVIRONMENT: ${{ secrets.API_SECRET_PINECONE_ENVIRONMENT }}
+#           PINECONE_INDEX: ${{ secrets.API_SECRET_PINECONE_INDEX }}
+#           PUBSUB_TOPIC: ${{ secrets.API_SECRET_PUBSUB_TOPIC }}
+#           REDIS_HOST: ${{ secrets.API_SECRET_REDIS_HOST }}
+#           SEGMENT_API_KEY: ${{ secrets.API_SECRET_SEGMENT_API_KEY }}
+#           STRIPE_API_KEY: ${{ secrets.API_SECRET_STRIPE_API_KEY }}
+#           STRIPE_WEBHOOK_SECRET: ${{ secrets.API_SECRET_STRIPE_WEBHOOK_SECRET }}
+#           TWILIO_ACCOUNT_SID: ${{ secrets.API_SECRET_TWILIO_ACCOUNT_SID }}
+#           TWILIO_AUTH_TOKEN: ${{ secrets.API_SECRET_TWILIO_AUTH_TOKEN }}
+#           TWILIO_PRIMARY_CUSTOMER_SID: ${{ secrets.API_SECRET_TWILIO_PRIMARY_CUSTOMER_SID }}
+#           TWILIO_VERIFY_SID: ${{ secrets.API_SECRET_TWILIO_VERIFY_SID }}
+#           SENTRY_DSN: ${{ secrets.API_SECRET_SENTRY_DSN }}
+#           RESEND_API_KEY: ${{ secrets.API_SECRET_RESEND_API_KEY }}
+#           UNSPLASH_ACCESS_KEY: ${{ secrets.API_SECRET_UNSPLASH_ACCESS_KEY }}
+#           UNSPLASH_SECRET_KEY: ${{ secrets.API_SECRET_UNSPLASH_SECRET_KEY }}
+#           PLAYHT_USER_ID: ${{ secrets.API_SECRET_PLAYHT_USER_ID }}
+#           PLAYHT_SECRET_KEY: ${{ secrets.API_SECRET_PLAYHT_SECRET_KEY }}
+#           MIXPANEL_TOKEN: ${{ secrets.API_SECRET_MIXPANEL_TOKEN }}
+#           ZAPIER_CLIENT_ID: ${{ secrets.API_SECRET_ZAPIER_CLIENT_ID }}
+#           PROMPTARMOR_API_KEY: ${{ secrets.API_SECRET_PROMPTARMOR_API_KEY }}
+#           HELICONE_API_KEY: ${{ secrets.API_SECRET_HELICONE_API_KEY }}
+#           AZURE_OPENAI_KEY: ${{ secrets.API_SECRET_AZURE_OPENAI_KEY }}
+#           AZURE_OPENAI_ENDPOINT: ${{ secrets.API_SECRET_AZURE_OPENAI_ENDPOINT }}
+#           DB_NAME: pr-${{ github.event.number }}
+
+#       - name: Build and push Docker images
+#         run: |
+#           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/api-pr-${{ github.event.number }} -f api/Dockerfile .
+#           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/dashboard-pr-${{ github.event.number }} -f dashboard/Dockerfile .
+#           echo ${{ secrets.GCP_SA_KEY_PATH }} | docker login -u _json_key --password-stdin https://gcr.io
+#           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/api-pr-${{ github.event.number }}
+#           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/dashboard-pr-${{ github.event.number }}
+
+#       - name: Deploy to Cloud Run
+#         run: |
+#           gcloud run deploy api-pr-${{ github.event.number }} --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/api-pr-${{ github.event.number }} --platform=managed --region=us-central1 --set-env-vars=DB_NAME=pr-${{ github.event.number }},DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }},DB_HOST=$INSTANCE_CONNECTION_NAME --project=${{ secrets.GCP_PROJECT_ID }}
+#           gcloud run deploy dashboard-pr-${{ github.event.number }} --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/dashboard-pr-${{ github.event.number }} --platform=managed --region=us-central1 --project=${{ secrets.GCP_PROJECT_ID }}
+
+#       - name: Patch Cloud SQL instance activation policy
+#         run: |
+#           gcloud sql instances patch $INSTANCE_CONNECTION_NAME --activation-policy NEVER
+
+
+# name: Create Preview Environment
+
+# on:
+#   pull_request:
+#     types: [opened, synchronize, reopened]
+
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Authenticate to GCP
+#         uses: google-github-actions/auth@v1
+#         with:
+#           credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+#       - name: Set up Cloud SDK
+#         uses: google-github-actions/setup-gcloud@v1
+#         with:
+#           project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+#       - name: Create a new database
+#         run: |
+#           DB_NAME="pr-${{ github.event.number }}"
+#           INSTANCE_CONNECTION_NAME="${{ secrets.CLOUD_SQL_INSTANCE_CONNECTION_NAME }}"
+#           INSTANCE_NAME=$(echo $INSTANCE_CONNECTION_NAME | cut -d':' -f3)
+#           gcloud sql databases create $DB_NAME --instance=$INSTANCE_NAME --project=${{ secrets.GCP_PROJECT_ID }}
+
+#       - name: Run migrations
+#         run: |
+#           DB_NAME="pr-${{ github.event.number }}"
+#           python manage.py migrate --database=$DB_NAME
+
+#       - name: Build and push Docker images
+#         run: |
+#           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/api-pr-${{ github.event.number }} -f api/Dockerfile .
+#           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/dashboard-pr-${{ github.event.number }} -f dashboard/Dockerfile .
+#           gcloud auth configure-docker
+#           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/api-pr-${{ github.event.number }}
+#           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/dashboard-pr-${{ github.event.number }}
+
+#       - name: Deploy to Cloud Run
+#         run: |
+#           INSTANCE_CONNECTION_NAME="${{ secrets.CLOUD_SQL_INSTANCE_CONNECTION_NAME }}"
+#           gcloud run deploy api-pr-${{ github.event.number }} --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/api-pr-${{ github.event.number }} --platform=managed --region=us-central1 --set-env-vars=DB_NAME=pr-${{ github.event.number }},DB_USER=${{ secrets.DB_USER }},DB_PASSWORD=${{ secrets.DB_PASSWORD }},DB_HOST=$INSTANCE_CONNECTION_NAME --project=${{ secrets.GCP_PROJECT_ID }}
+#           gcloud run deploy dashboard-pr-${{ github.event.number }} --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/dashboard-pr-${{ github.event.number }} --platform=managed --region=us-central1 --project=${{ secrets.GCP_PROJECT_ID }}
 
 # name: Create Preview Environment
 

@@ -5,13 +5,14 @@ on:
     types: [closed]
 
 jobs:
-  delete-environment:
+  delete-preview:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    env:
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      INSTANCE_CONNECTION_NAME: ${{ secrets.CLOUD_SQL_INSTANCE_CONNECTION_NAME }}
 
+    steps:
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v1
         with:
@@ -21,18 +22,59 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-
+          
       - name: Delete Cloud Run services
         run: |
           gcloud run services delete api-pr-${{ github.event.number }} --platform=managed --region=us-central1 --quiet --project=${{ secrets.GCP_PROJECT_ID }}
           gcloud run services delete dashboard-pr-${{ github.event.number }} --platform=managed --region=us-central1 --quiet --project=${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Delete the database
+      - name: Delete Cloud SQL database
         run: |
           DB_NAME="pr-${{ github.event.number }}"
-          INSTANCE_CONNECTION_NAME="${{ secrets.CLOUD_SQL_INSTANCE_CONNECTION_NAME }}"
           INSTANCE_NAME=$(echo $INSTANCE_CONNECTION_NAME | cut -d':' -f3)
-          gcloud sql databases delete $DB_NAME --instance=$INSTANCE_NAME --quiet --project=${{ secrets.GCP_PROJECT_ID }}
+          gcloud sql databases delete $DB_NAME --instance=$INSTANCE_NAME --project=${{ secrets.GCP_PROJECT_ID }} --quiet
+
+      - name: Patch Cloud SQL instance activation policy back to default
+        run: |
+          gcloud sql instances patch $INSTANCE_CONNECTION_NAME --activation-policy ALWAYS --project=${{ secrets.GCP_PROJECT_ID }}
+
+
+
+# name: Delete Preview Environment
+
+# on:
+#   pull_request:
+#     types: [closed]
+
+# jobs:
+#   delete-environment:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Authenticate to GCP
+#         uses: google-github-actions/auth@v1
+#         with:
+#           credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+#       - name: Set up Cloud SDK
+#         uses: google-github-actions/setup-gcloud@v1
+#         with:
+#           project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+#       - name: Delete Cloud Run services
+#         run: |
+#           gcloud run services delete api-pr-${{ github.event.number }} --platform=managed --region=us-central1 --quiet --project=${{ secrets.GCP_PROJECT_ID }}
+#           gcloud run services delete dashboard-pr-${{ github.event.number }} --platform=managed --region=us-central1 --quiet --project=${{ secrets.GCP_PROJECT_ID }}
+
+#       - name: Delete the database
+#         run: |
+#           DB_NAME="pr-${{ github.event.number }}"
+#           INSTANCE_CONNECTION_NAME="${{ secrets.CLOUD_SQL_INSTANCE_CONNECTION_NAME }}"
+#           INSTANCE_NAME=$(echo $INSTANCE_CONNECTION_NAME | cut -d':' -f3)
+#           gcloud sql databases delete $DB_NAME --instance=$INSTANCE_NAME --quiet --project=${{ secrets.GCP_PROJECT_ID }}
 
 
 # name: Delete Preview Environment
