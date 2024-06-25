@@ -50,6 +50,10 @@ jobs:
           echo "DB_PORT: ${{ secrets.DB_PORT }}"
           echo "DB_USERNAME: ${{ secrets.DB_USERNAME }}"
           echo "DB_DATABASE: ${{ secrets.DB_DATABASE }}"
+      - name: Debug network connectivity
+        run: |
+            ping -c 5 ${DB_HOST}
+            nslookup ${DB_HOST}
       
       - name: Connect to PostgreSQL
         env:
