@@ -43,7 +43,14 @@ jobs:
 
       - name: Set up PostgreSQL client
         run: sudo apt-get install -y postgresql-client
-    
+
+      - name: Debug Connection Details
+        run: |
+          echo "DB_HOST: ${{ secrets.DB_HOST }}"
+          echo "DB_PORT: ${{ secrets.DB_PORT }}"
+          echo "DB_USERNAME: ${{ secrets.DB_USERNAME }}"
+          echo "DB_DATABASE: ${{ secrets.DB_DATABASE }}"
+      
       - name: Connect to PostgreSQL
         env:
               DB_HOST: ${{ secrets.DB_HOST }}
