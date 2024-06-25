@@ -28,17 +28,17 @@ jobs:
       - name: Install dependencies with yarn
         run: yarn install
         working-directory: ${{ env._DIRECTORY }}
-        
+
       - name: Install TypeORM
-        run: npm install typeorm --save
+        run: npm install typeorm --save --legacy-peer-deps
         working-directory: ${{ env._DIRECTORY }}
 
       - name: Install @types/node
-        run: npm install @types/node --save-dev
+        run: npm install @types/node --save-dev --legacy-peer-deps
         working-directory: ${{ env._DIRECTORY }}
 
       - name: Install pg
-        run: npm install pg --save
+        run: npm install pg --save --legacy-peer-deps
         working-directory: ${{ env._DIRECTORY }}
 
 
