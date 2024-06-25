@@ -28,6 +28,19 @@ jobs:
       - name: Install dependencies with yarn
         run: yarn install
         working-directory: ${{ env._DIRECTORY }}
+        
+      - name: Install TypeORM
+        run: npm install typeorm --save
+        working-directory: ${{ env._DIRECTORY }}
+
+      - name: Install @types/node
+        run: npm install @types/node --save-dev
+        working-directory: ${{ env._DIRECTORY }}
+
+      - name: Install pg
+        run: npm install pg --save
+        working-directory: ${{ env._DIRECTORY }}
+
 
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v1
