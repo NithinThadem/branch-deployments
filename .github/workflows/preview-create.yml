@@ -21,27 +21,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Install yarn
-        run: npm install -g yarn
-
-      - name: Install dependencies with yarn
-        run: yarn install
-        working-directory: ${{ env._DIRECTORY }}
-
-      - name: Install TypeORM
-        run: npm install typeorm --save --legacy-peer-deps
-        working-directory: ${{ env._DIRECTORY }}
-
-      - name: Install @types/node
-        run: npm install @types/node --save-dev --legacy-peer-deps
-        working-directory: ${{ env._DIRECTORY }}
-
-      - name: Install pg
-        run: npm install pg --save --legacy-peer-deps
-        working-directory: ${{ env._DIRECTORY }}
-
-
+          
+      - name: Install npm
+        run: npm install
+      
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v1
         with:
@@ -137,7 +120,6 @@ jobs:
       - name: Run migrations
         run: |
           echo "Running migrations"
-          echo ${{ steps.secrets.outputs.API_SECRET_API_URL }}
           yarn typeorm migration:run -d ./src/services/database/data-source.ts
           cd ${{ env._DIRECTORY }}
 
