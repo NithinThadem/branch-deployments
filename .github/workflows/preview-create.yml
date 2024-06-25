@@ -50,11 +50,17 @@ jobs:
           echo "DB_PORT: ${{ secrets.DB_PORT }}"
           echo "DB_USERNAME: ${{ secrets.DB_USERNAME }}"
           echo "DB_DATABASE: ${{ secrets.DB_DATABASE }}"
-      - name: Debug network connectivity
+      - name: Echo DB_HOST for debugging
         run: |
-            ping -c 5 ${DB_HOST}
-            nslookup ${DB_HOST}
-      
+          echo "DB_HOST: ${DB_HOST}"
+  
+      - name: Test network connectivity with ping
+        run: |
+            if [ -n "${DB_HOST}" ]; then
+              ping -c 5 "${DB_HOST}"
+            else
+              echo "DB_HOST variable is empty or not set."
+            fi
       - name: Connect to PostgreSQL
         env:
               DB_HOST: ${{ secrets.DB_HOST }}
