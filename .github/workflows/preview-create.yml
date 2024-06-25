@@ -24,6 +24,17 @@ jobs:
 
       - name: Install npm
         run: npm install --legacy-peer-deps
+
+      - name: Install Cloud SQL Auth proxy
+        run: |
+          wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+          chmod +x cloud_sql_proxy
+
+      - name: Start Cloud SQL Auth proxy
+        run: |
+          ./cloud_sql_proxy -instances=${{ secrets.DB_INSTANCE }}=tcp:5432 &
+        env:
+          DB_INSTANCE: ${{ secrets.DB_INSTANCE }}
       
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v1
