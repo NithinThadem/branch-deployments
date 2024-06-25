@@ -1,0 +1,13 @@
+Given the following question, use the transcript to provide the correct answer based on the user's response.
+
+**Question:**
+
+{question}
+
+**Answer Choices:**
+
+{answers}
+
+**Transcript:**
+
+{transcript}

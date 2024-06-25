@@ -1,0 +1,4 @@
+Write a LinkedIn post using the content below. The author of the post is {subject_name}.
+
+{transcript}
+

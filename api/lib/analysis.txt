@@ -1,0 +1,9 @@
+Answer each of the following questions using the transcript below. If the question is a yes/no question, answer with a yes or no. If the question is a WH question, answer with the information from the transcript in as few words as possible. If the question is not answered, write n/a.
+
+Questions:
+
+{questions}
+
+Transcript:
+
+{transcript}

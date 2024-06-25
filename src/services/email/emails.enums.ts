@@ -1,0 +1,16 @@
+export enum TransactionalEmail {
+	NEW_RESPONSE_VIDEO = 'clnds3yr400k6mh0pc3a5mezr',
+	NEW_RESPONSE_PHONE = 'clq11svjw03ipl70ncqbzfes7',
+	USER_INVITED = 'clnnh42sh00gml00nr888om4g',
+	NEW_TEAM_MEMBER = 'clnp08eev00xpjs0psh9c5vli',
+	TEAM_OVER_MINUTES = 'clorfo37r0377ju0o5ggoyqnn',
+	APPOINTMENT_SCHEDULED = 'cls9fkunm0064h72wz8wqeo57',
+	BUSINESS_VERIFICATION_APPROVED = 'clsdlr5ic00xqzcnp0y3f55m4',
+	BUSINESS_VERIFICATION_REJECTED = 'clsdluw5401el3nds0q7vjz8f',
+	PHONE_NUMBER_PURCHASE_FAILED = 'cltncbonh002k1486r5cyrq7z',
+	CAMPAIGN_APPROVED = 'clvp9i8i400vsm6rxgpnu1ygn',
+	CAMPAIGN_REJECTED = 'clvp97d2g015110h3smruekg1',
+	SHAKEN_STIR_APPROVED = 'clvp9mdhs02lf124unblh7a06',
+	SHAKEN_STIR_REJECTED = 'clvp8vgz701nyiqa0a3c222ae',
+	BRAND_SUBMITTED = 'clvp8hni500roblf6q4275573',
+}

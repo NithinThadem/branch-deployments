@@ -1,0 +1,14 @@
+#!include:Dockerfile
+.git
+node_modules/
+.idea/
+dist/
+.env
+.DS_Store
+.expo/
+.editorconfig
+.gitignore
+.github/
+log/
+cache/
+.react-email/

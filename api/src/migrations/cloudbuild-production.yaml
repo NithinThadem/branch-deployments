@@ -1,0 +1,203 @@
+substitutions:
+  _DIRECTORY: api
+  _GCP_PROJECT_ID: "542105245526"
+  _POOL_NAME: "projects/thoughtlead/locations/us-east4/workerPools/cloudsql-cloudbuild-pool-production"
+
+steps:
+- id: 'install dependencies'
+  name: 'node:18'
+  dir: '${_DIRECTORY}'
+  entrypoint: 'yarn'
+  args: ['install']
+
+- id: 'run migrations'
+  name: 'node:18'
+  dir: '${_DIRECTORY}'
+  entrypoint: 'yarn'
+  args: ['db:migrate']
+  secretEnv: ['API_URL', 'AUTH0_AUDIENCE', 'AUTH0_ISSUER_BASE_URL', 'AUTH0_MGMT_AUDIENCE', 'AUTH0_MGMT_CLIENT_ID', 'AUTH0_MGMT_CLIENT_SECRET', 'AUTH0_SECRET', 'AUTH0_TOKEN_SIGNING_ALG', 'AUTH0_TOKEN_URL', 'DB_DATABASE', 'DB_ENABLE_REPLICA', 'DB_HOST', 'DB_LOGGING', 'DB_PASSWORD', 'DB_POOL_SIZE', 'DB_PORT', 'DB_SYNC', 'DB_TYPE', 'DB_USERNAME', 'DEEPGRAM_API_KEY', 'ELEVENLABS_API_KEY', 'FQDN', 'GCP_BUCKET_NAME', 'GCP_PROJECT_ID', 'LOOPS_API_KEY', 'MISTRAL_API_KEY', 'NANGO_HMAC_SECRET', 'NANGO_SECRET_KEY', 'NODE_ENV', 'OPENAI_API_KEY', 'OUTBOUND_PHONE_NUMBER', 'PINECONE_API_KEY', 'PINECONE_ENVIRONMENT', 'PINECONE_INDEX', 'PUBSUB_TOPIC', 'REDIS_HOST', 'SEGMENT_API_KEY', 'STRIPE_API_KEY', 'STRIPE_WEBHOOK_SECRET', 'TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_PRIMARY_CUSTOMER_SID', 'TWILIO_VERIFY_SID', 'SENTRY_DSN', 'RESEND_API_KEY', 'UNSPLASH_ACCESS_KEY', 'UNSPLASH_SECRET_KEY', 'PLAYHT_USER_ID', 'PLAYHT_SECRET_KEY', 'MIXPANEL_TOKEN', 'ZAPIER_CLIENT_ID', 'PROMPTARMOR_API_KEY', 'HELICONE_API_KEY', 'AZURE_OPENAI_KEY', 'AZURE_OPENAI_ENDPOINT','SERVICE_ACCOUNT_KEY_PATH', 'GCP_SA_KEY_PATH']
+
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_DB_DATABASE/versions/latest
+      env: 'DB_DATABASE'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_DB_ENABLE_REPLICA/versions/latest
+      env: 'DB_ENABLE_REPLICA'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_DB_HOST/versions/latest
+      env: 'DB_HOST'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_DB_LOGGING/versions/latest
+      env: 'DB_LOGGING'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_DB_PASSWORD/versions/latest
+      env: 'DB_PASSWORD'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_DB_POOL_SIZE/versions/latest
+      env: 'DB_POOL_SIZE'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_DB_PORT/versions/latest
+      env: 'DB_PORT'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_DB_SYNC/versions/latest
+      env: 'DB_SYNC'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_DB_TYPE/versions/latest
+      env: 'DB_TYPE'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_DB_USERNAME/versions/latest
+      env: 'DB_USERNAME'
+
+# API_URL
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_API_URL/versions/latest
+      env: 'API_URL'
+# AUTH0_AUDIENCE
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_AUTH0_AUDIENCE/versions/latest
+      env: 'AUTH0_AUDIENCE'
+# AUTH0_ISSUER_BASE_URL
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_AUTH0_ISSUER_BASE_URL/versions/latest
+      env: 'AUTH0_ISSUER_BASE_URL'
+# AUTH0_MGMT_AUDIENCE
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_AUTH0_MGMT_AUDIENCE/versions/latest
+      env: 'AUTH0_MGMT_AUDIENCE'
+# AUTH0_MGMT_CLIENT_ID
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_AUTH0_MGMT_CLIENT_ID/versions/latest
+      env: 'AUTH0_MGMT_CLIENT_ID'
+# AUTH0_MGMT_CLIENT_SECRET
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_AUTH0_MGMT_CLIENT_SECRET/versions/latest
+      env: 'AUTH0_MGMT_CLIENT_SECRET'
+# AUTH0_SECRET
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_AUTH0_SECRET/versions/latest
+      env: 'AUTH0_SECRET' 
+# AUTH0_TOKEN_SIGNING_ALG
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_AUTH0_TOKEN_SIGNING_ALG/versions/latest
+      env: 'AUTH0_TOKEN_SIGNING_ALG'
+# AUTH0_TOKEN_URL
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_AUTH0_TOKEN_URL/versions/latest
+      env: 'AUTH0_TOKEN_URL'
+# DEEPGRAM_API_KEY
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_DEEPGRAM_API_KEY/versions/latest
+      env: 'DEEPGRAM_API_KEY'
+# ELEVENLABS_API_KEY
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_ELEVENLABS_API_KEY/versions/latest
+      env: 'ELEVENLABS_API_KEY'
+# FQDN
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_FQDN/versions/latest
+      env: 'FQDN'
+# GCP_BUCKET_NAME
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_GCP_BUCKET_NAME/versions/latest
+      env: 'GCP_BUCKET_NAME'
+# GCP_PROJECT_ID
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_GCP_PROJECT_ID/versions/latest
+      env: 'GCP_PROJECT_ID'
+# LOOPS_API_KEY
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_LOOPS_API_KEY/versions/latest
+      env: 'LOOPS_API_KEY'
+# MISTRAL_API_KEY
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_MISTRAL_API_KEY/versions/latest
+      env: 'MISTRAL_API_KEY'
+# NANGO_HMAC_SECRET
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_NANGO_HMAC_SECRET/versions/latest
+      env: 'NANGO_HMAC_SECRET'
+# NANGO_SECRET_KEY
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_NANGO_SECRET_KEY/versions/latest
+      env: 'NANGO_SECRET_KEY'
+# NODE_ENV
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_NODE_ENV/versions/latest
+      env: 'NODE_ENV'
+# OPENAI_API_KEY
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_OPENAI_API_KEY/versions/latest
+      env: 'OPENAI_API_KEY'
+# OUTBOUND_PHONE_NUMBER
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_OUTBOUND_PHONE_NUMBER/versions/latest
+      env: 'OUTBOUND_PHONE_NUMBER'
+# PINECONE_API_KEY
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_PINECONE_API_KEY/versions/latest
+      env: 'PINECONE_API_KEY'
+# PINECONE_ENVIRONMENT
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_PINECONE_ENVIRONMENT/versions/latest
+      env: 'PINECONE_ENVIRONMENT'
+# PINECONE_INDEX
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_PINECONE_INDEX/versions/latest
+      env: 'PINECONE_INDEX'
+# PUBSUB_TOPIC
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_PUBSUB_TOPIC/versions/latest
+      env: 'PUBSUB_TOPIC'
+# REDIS_HOST
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_REDIS_HOST/versions/latest
+      env: 'REDIS_HOST'
+# SEGMENT_API_KEY
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_SEGMENT_API_KEY/versions/latest
+      env: 'SEGMENT_API_KEY'
+# STRIPE_API_KEY
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_STRIPE_API_KEY/versions/latest
+      env: 'STRIPE_API_KEY'
+# STRIPE_WEBHOOK_SECRET
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_STRIPE_WEBHOOK_SECRET/versions/latest
+      env: 'STRIPE_WEBHOOK_SECRET'
+# TWILIO_ACCOUNT_SID
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_TWILIO_ACCOUNT_SID/versions/latest
+      env: 'TWILIO_ACCOUNT_SID'
+# TWILIO_AUTH_TOKEN
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_TWILIO_AUTH_TOKEN/versions/latest
+      env: 'TWILIO_AUTH_TOKEN'
+# TWILIO_PRIMARY_CUSTOMER_SID
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_TWILIO_PRIMARY_CUSTOMER_SID/versions/latest
+      env: 'TWILIO_PRIMARY_CUSTOMER_SID'
+# TWILIO_VERIFY_SID
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_TWILIO_VERIFY_SID/versions/latest
+      env: 'TWILIO_VERIFY_SID'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_SENTRY_DSN/versions/latest
+      env: 'SENTRY_DSN'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_RESEND_API_KEY/versions/latest
+      env: 'RESEND_API_KEY'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_UNSPLASH_ACCESS_KEY/versions/latest
+      env: 'UNSPLASH_ACCESS_KEY'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_UNSPLASH_SECRET_KEY/versions/latest
+      env: 'UNSPLASH_SECRET_KEY'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_PLAYHT_USER_ID/versions/latest
+      env: 'PLAYHT_USER_ID'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_PLAYHT_SECRET_KEY/versions/latest
+      env: 'PLAYHT_SECRET_KEY'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_MIXPANEL_TOKEN/versions/latest
+      env: 'MIXPANEL_TOKEN'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_ZAPIER_CLIENT_ID/versions/latest
+      env: 'ZAPIER_CLIENT_ID'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_PROMPTARMOR_API_KEY/versions/latest
+      env: 'PROMPTARMOR_API_KEY'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_HELICONE_API_KEY/versions/latest
+      env: 'HELICONE_API_KEY'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_AZURE_OPENAI_KEY/versions/latest
+      env: 'AZURE_OPENAI_KEY'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_AZURE_OPENAI_ENDPOINT/versions/latest
+      env: 'AZURE_OPENAI_ENDPOINT'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/SERVICE_ACCOUNT_KEY_PATH/versions/latest
+      env: 'SERVICE_ACCOUNT_KEY_PATH'
+
+    - versionName: projects/${_GCP_PROJECT_ID}/secrets/API_SECRET_GCP_SA_KEY_PATH/versions/latest
+      env: 'GCP_SA_KEY_PATH'
+
+      
+
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  dynamicSubstitutions: true
+  pool:
+    name: '${_POOL_NAME}'
+

@@ -1,0 +1,11 @@
+The follow is a transcript from a call. Analyze the transcript and determine if their are any follow up actions that need to occur as well as summarize the conversation in bullet points start with 1.
+
+The current date is: {date}
+
+Here are tags that the person provided for categorization prioritize using these first. If any of these tags are met, always return them: {tags}.
+
+If no tags are given, DO NOT CREATE ANY TAGS ON YOUR OWN, JUST RETURN NOTHING.
+
+Assign tags to the conversation based off the transcript.
+
+{transcript}
