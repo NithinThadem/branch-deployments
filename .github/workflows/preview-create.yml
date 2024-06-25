@@ -40,6 +40,21 @@ jobs:
             ./cloud_sql_proxy -instances=${{ secrets.DB_INSTANCE }}=tcp:5432 &
         env:
             DB_INSTANCE: ${{ secrets.DB_INSTANCE }}
+
+      - name: Set up PostgreSQL client
+        run: sudo apt-get install -y postgresql-client
+    
+      - name: Connect to PostgreSQL
+        env:
+              DB_HOST: ${{ secrets.DB_HOST }}
+              DB_PORT: ${{ secrets.DB_PORT }}
+              DB_USERNAME: ${{ secrets.DB_USERNAME }}
+              DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+              DB_DATABASE: ${{ secrets.DB_DATABASE }}
+        run: |
+          echo "Connecting to PostgreSQL database"
+          PGPASSWORD=${DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USERNAME} -d ${DB_DATABASE} -c "SELECT version();"
+    
         
       - name: Get secrets from Google Secret Manager
         id: secrets
@@ -127,6 +142,13 @@ jobs:
             echo "${DB_POOL_SIZE}"
             echo "${DB_ENABLE_REPLICA}"
             echo "${DB_NAME}"
+
+      - name: Run PostgreSQL Connection Job
+        run: |
+          echo "Running PostgreSQL Connection Job"
+          echo "Connecting to PostgreSQL database"
+          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h ${{ secrets.DB_HOST }} -p ${{ secrets.DB_PORT }} -U ${{ secrets.DB_USERNAME }} -d ${{ secrets.DB_DATABASE }} -c "SELECT version();"
+
 
       - name: Run migrations
         run: |
